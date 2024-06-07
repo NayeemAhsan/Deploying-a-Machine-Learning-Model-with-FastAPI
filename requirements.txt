@@ -1,0 +1,9 @@
+python==3.10
+numpy
+pandas
+scikit-learn
+pytest
+requests
+fastapi
+uvicorn
+gunicorn
