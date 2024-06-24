@@ -49,12 +49,9 @@ def go(args):
     logger.info("mapping 'salary' col to binary integers")
     df['salary'] = df['salary'].map({'<=50k': 0, '>50k': 1})
 
-    # Separate features and target
-    logger.info("Separate features and target columns")
-    X_df = df.drop('salary', axis=1)
-    y_df = df['salary']
-
-    return X_df, y_df
+    logger.info('saving the preprocessed data')
+    filename = config["data"]["processed_data_path"]
+    df.to_csv(filename, index=False)
 
 
 if __name__ == "__main__":
