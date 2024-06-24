@@ -14,15 +14,18 @@ main:
   # This seed will be used to seed the random number generator
   # to ensure repeatibility of the data splits and other
   # pseudo-random operations
-  random_seed: 42
 data:
   data_path: data/census.csv
-  file_url: "https://github.com/udacity/build-ml-pipeline-for-short-term-rental-prices/blob/main/components/get_data/data/sample1.csv?raw=true"
-  new_data: "https://github.com/udacity/build-ml-pipeline-for-short-term-rental-prices/blob/main/components/get_data/data/sample2.csv?raw=true"
+  processed_data_path: data/processed/processed_data.csv
+  train_path: data/splits/train.csv
+  test_path: data/splits/test.csv
+  model_path: models/rfc_model.pkl
+  slicing_output: output_metrics/slicing.txt
   # Fraction of data to use for test (the remaining will be used for train and validation)
   test_size: 0.2
   # Fraction of remaining data to use for validation
   val_size: 0.2
+  random_seed: 42
   # Column to use for stratification (use "none" for no stratification)
   stratify_by: "salary"
 etl:
@@ -32,7 +35,7 @@ data_check:
   kl_threshold: 0.2
   # Threshold for Kolomorov-Smirnov test
   ks_alpha: 0.05
-random_forest_pipeline:
+pipeline_param:
   random_forest:
     n_estimators: 100
     criterion: squared_error
@@ -57,23 +60,19 @@ random_forest_pipeline:
     class_weight: "balanced"
     ccp_alpha: 0.0
     max_samples: null
-  features:
-    numerical:
-      - "latitude"
-      - "longitude"
-      - "minimum_nights"
-      - "number_of_reviews"
-      - "reviews_per_month"
-      - "calculated_host_listings_count"
-      - "availability_365"
-    non_ordinal_categ:
-      - "neighbourhood_group"
-    ordinal_categ:
-      - "room_type"
-    date:
-      - "last_review"
-    nlp:
-      - "name"
-  tfidf:
-    max_tfidf_features: 30
-  export_artifact: "model_export"
+features:
+  numerical:
+    - 'age'
+    - 'fnlgt'
+    - 'capital_gain'
+    - 'capital_loss'
+    - 'hours_per_week'
+  non_ordinal_categ:
+    - 'marital_status'
+    - 'occupation'
+    - 'relationship'
+    - 'race'
+    - 'sex'
+    - 'workclass'
+    - 'native_country'
+    - 'education'
