@@ -1,0 +1,35 @@
+stages:
+  load_and_preprocess_data:
+    cmd: python src/pipeline/load_and_preprocess_data.py --config=config.yaml
+    deps:
+    - src/pipeline/load_and_preprocess_data.py
+    - data/census.csv
+    outs:
+    - data/processed/processed_data.csv
+  
+  split_data:
+    cmd: python src/pipeline/train_test_split.py --config=config.yaml
+    deps:
+    - src/pipeline/train_test_split.py
+    - data/processed/processed_data.csv
+    outs:
+    - data/splits/train.csv
+    - data/splits/test.csv
+
+  model_train:
+    cmd: python src/pipeline/model.py --config=config.yaml
+    deps:
+    - data/splits/train.csv
+    - src/pipeline/model.py
+    params:
+    - pipeline_param.random_forest.max_depth
+    - pipeline_param.random_forest.n_estimators
+
+  model_evaluation:
+    cmd: python src/pipeline/evaluate.py --config=config.yaml
+    deps:
+    - src/pipeline/evaluate.py
+    - data/splits/test.csv
+    params:
+    - pipeline_param.random_forest.max_depth
+    - pipeline_param.random_forest.n_estimators
