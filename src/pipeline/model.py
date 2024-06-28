@@ -105,8 +105,10 @@ def get_inference_pipeline(config):
     categorical_features = sorted(config['features']["non_ordinal_categ"])
     categorical_preproc = make_pipeline(
         SimpleImputer(strategy='most_frequent'),
-        OneHotEncoder()
-    )
+        OneHotEncoder(handle_unknown='ignore')
+    ) # this is very common for a model to encounter categories in the test data that it didn't see during training.
+      # The use of handle_unknown='ignore' for the OneHotEncoder method will ensure that the preprocessing steps 
+      # handle unseen categories gracefully
 
     # Numerical preprocessing pipeline
     # Impute the numerical columns to make sure we can handle missing values
