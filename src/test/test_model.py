@@ -41,17 +41,18 @@ def test_columns_exist(config, df):
     Test if all expected columns exist
     """
     features_config = config["features"]
-    
+
     # Flatten the list of features
     columns = []
     for feature_list in features_config.values():
         columns.extend(feature_list)
-    
+
     try:
         assert sorted(set(df.columns).intersection(columns)) == sorted(columns)
     except AssertionError as err:
         missing_features = set(columns) - set(df.columns)
-        logging.error(f"Features are missing in the data set: {missing_features}")
+        logging.error(
+            f"Features are missing in the data set: {missing_features}")
         raise err
 
 
@@ -67,7 +68,8 @@ def test_model_presence(config):
     try:
         _ = pickle.load(open(model_path, 'rb'))
     except Exception as err:
-        logging.error("Testing saved model: Saved model does not appear to be valid")
+        logging.error(
+            "Testing saved model: Saved model does not appear to be valid")
         raise err
 
 
@@ -79,7 +81,8 @@ def test_model_training(config, train_data):
     model, processed_features = get_inference_pipeline(config)
 
     try:
-        # Fit the pipeline sk_pipe by calling the .fit method on X_train and y_train
+        # Fit the pipeline sk_pipe by calling the .fit method on X_train and
+        # y_train
         logging.info("Training random forest model")
         model = model.fit(X_train[processed_features], y_train)
     except Exception as err:
@@ -94,7 +97,8 @@ def test_inference(config, train_data):
     X_train, X_test, y_train, y_test = train_data
     model, processed_features = get_inference_pipeline(config)
 
-    # Fit the pipeline sk_pipe by calling the .fit method on X_train and y_train
+    # Fit the pipeline sk_pipe by calling the .fit method on X_train and
+    # y_train
     model = model.fit(X_train[processed_features], y_train)
 
     try:
@@ -125,6 +129,6 @@ def test_metrics(config, train_data):
         logging.error("Model evaluation failed")
         raise err
 
-    #assert precision > 0.7
-    #assert recall > 0.7
-    #assert f1_beta > 0.7
+    # assert precision > 0.7
+    # assert recall > 0.7
+    # assert f1_beta > 0.7
