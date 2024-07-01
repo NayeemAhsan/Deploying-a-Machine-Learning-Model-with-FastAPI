@@ -8,7 +8,6 @@ import argparse
 import logging
 import os
 import shutil
-import matplotlib.pyplot as plt
 import yaml
 import tempfile
 import itertools
