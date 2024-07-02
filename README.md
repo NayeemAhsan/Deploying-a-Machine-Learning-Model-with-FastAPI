@@ -45,44 +45,44 @@ pip install -r requirements.txt
  ┗ 📜render.yaml            # Deployment file for Render
 ```
 ## Usage
-The config file contains data variables like, data path, train and test size, random seed, etc. It also contains model variables like paramerters values for Random Forest Classifier used in this example. it also has feature information. This file can be used for any other models or features. There is no need to change any code inside any python files. Only changing variables from the config file will work.  
+The config file contains data variables like, data path, train and test size, random seed, etc. It also contains model variables like paramerters values for Random Forest Classifier used in this example. It also has feature information and example of sample data. This file can be used for any other models or features. There is no need to change any code inside any python files. Only changing variables from the config file will work.  
 
 ### Steps
 
 #### Pipeline building
 
-1- EDA
+##### EDA
 ```bash
 cd EDA
 jupyter labs
 ```
-2- Load and Preprocess data
+##### Load and Preprocess data
 ```bash
 python src/pipeline/load_and_preprocess_data.py --config config.yaml
 ```
-3- train and Test Split
+##### Train and Test Split
 ```bash
 python src/pipeline/train_test_split.py --config config.yaml
 ```
-4- Train data
+##### Train Model
 ```bash
 python src/pipeline/model.py --config config.yaml
 ```
-5- Evaluation
+##### Evaluation
 ```bash
 python src/pipeline/evaluate.py --config config.yaml
 ```
-6- Data slice evaluation
+##### Data Slice Evaluation
 ```bash
 python src/pipeline/data_slicing.py --config config.yaml
 ```
 
 #### API app
-7- Start FastAPI app
+##### Start the app using FastAPI
 ```bash
 uvicorn src.api.main:app --reload
 ```
-8- FastAPI app documentation to test the API from the browser
+##### FastAPI app documentation to test the API from the browser
 ```
 http://127.0.0.1:8000/docs
 ```
@@ -90,19 +90,21 @@ http://127.0.0.1:8000/docs
 <img src="images/fastAPI_post_2.png">
 
 #### Testing
-9- Testing the project
+
+##### Testing the project
 ```bash
 pytest src/test -vv --config config.yaml
 ```
 
 #### DVC 
-10- The pipeline can be run automatically with DVC command
+
+##### The pipeline can be run automatically with DVC command
 ```bash
 dvc repro
 ```
 This will read the dvc.yaml file and run the commands accordingly. 
 
-11- Showing tracked files with DVC
+##### Showing tracked files with DVC
 ```bash
 dvc dag
 ```
@@ -110,25 +112,25 @@ dvc dag
 
 #### CI/CD
 
-12- CI using github action will be triggered upon pushing to github
+##### CI using github action will be triggered upon pushing to github
 ```bash
 git push
 ```
 Image showing successful intergration 
 <img src="images/continuous_integration.png">
 
-13- CD is enabled from within Render app settings
+##### CD is enabled from within Render app settings
 <img src="images/continuous_deloyment.png">
 <img src="images/continuous_deloyment_2.png">
 
 Succesfull deployment 
 <img src="images/render_deployment.png">
 
-14- Starting the app on Render
+##### Starting the app on Render
 
 <img src="images/live_get.png">
 
-15- Test deployment on Render, demo post request
+##### Test deployment on Render, demo post request
 ```bash
 python src/api/post_request.py
 ```
