@@ -85,7 +85,7 @@ sample_data:
      "education_num": 9
      "capital_gain": 0
      "capital_loss": 0
-     "hours_per_week": 40
+     "native_country": "United-States"
   data_above_50k:
     "age": 40
     "workclass": "Private"
