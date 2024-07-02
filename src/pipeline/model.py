@@ -6,23 +6,17 @@ Date: 6/19/2024
 """
 import argparse
 import logging
-import os
-import shutil
 import yaml
-import tempfile
 import itertools
 import joblib
-
 import pandas as pd
-import numpy as np
+
+from sklearn.metrics import fbeta_score, precision_score, recall_score, mean_absolute_error
 from sklearn.compose import ColumnTransformer
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, FunctionTransformer
-
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
 from sklearn.pipeline import Pipeline, make_pipeline
 
 
@@ -66,11 +60,35 @@ def model(args):
     # Fit the pipeline sk_pipe by calling the .fit method on X_train and y_train
     logger.info("Training random forest model")
     sk_pipe.fit(X_train[processed_features], y_train)
+    # Make predictions on the training data
+    y_pred_tr = sk_pipe.predict(X_train[processed_features])
+    # Convert continuous predictions to binary if needed
+    if y_pred_tr.dtype == 'float64':
+        y_pred_tr = (y_pred_tr >= 0.5).astype(int)
+    # Compute F1, Precision, and Recall on training data
+    precision_tr = precision_score(y_train, y_pred_tr, zero_division=1)
+    recall_tr = recall_score(y_train, y_pred_tr, zero_division=1)
+    f1_beta_tr = fbeta_score(y_train, y_pred_tr, beta=1)
 
-    # Evaluate
+    logger.info(f"Precision_train: {precision_tr}")
+    logger.info(f"Recall_train: {recall_tr}")
+    logger.info(f"F1_Beta_train: {f1_beta_tr}")
+
+    # Evaluate on validation data
     logger.info("Predicting validation data")
-    pred = sk_pipe.predict(X_val[processed_features])
+    y_pred_val = sk_pipe.predict(X_val[processed_features])
     #pred_proba = sk_pipe.predict_proba(X_val[processed_features])
+    # Convert continuous predictions to binary if needed
+    if y_pred_val.dtype == 'float64':
+        y_pred_val = (y_pred_val >= 0.5).astype(int)
+    # Compute F1, Precision, and Recall on training data
+    precision_val = precision_score(y_val, y_pred_val, zero_division=1)
+    recall_val = recall_score(y_val, y_pred_val, zero_division=1)
+    f1_beta_val = fbeta_score(y_val, y_pred_val, beta=1)
+
+    logger.info(f"Precision_val: {precision_val}")
+    logger.info(f"Recall_val: {recall_val}")
+    logger.info(f"F1_Beta_val: {f1_beta_val}")
 
     # Compute r2 and MAE
     logger.info("Scoring")

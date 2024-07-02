@@ -9,9 +9,6 @@ import argparse
 import yaml
 import pandas as pd
 import joblib
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 from evaluate import compute_metrics
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")

@@ -8,7 +8,7 @@ import joblib # helps to load pre-defined model
 import pandas as pd
 import logging
 from fastapi import FastAPI
-from pydantic import BaseModel # Provides data validation and settings management using Python type annotations
+from pydantic import BaseModel, Field # Pydantic provides data validation and settings management using Python type annotations
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
@@ -27,24 +27,36 @@ model = joblib.load(model_path)
 app = FastAPI(title="Model Inference API", description="Deploying a ML Model with FastAPI", version="0.1")
 
 # Define Pydantic model for input data
-class InputData(BaseModel):
-    age: int
-    workclass: str|None 
-    fnlgt: int
-    education: str|None 
-    education_num: int
-    marital_status: str|None # this "|" indicates that the data type of the 'marital_status' feature is optional.
-    occupation: str|None # so this feature can be a string or it doesn't contain any data type which means it can be an empty field
-    relationship: str|None # so, this is an Union (OR function)
-    race: str|None # this '|' is not available in the previous version of python, where we need to import Optional modeule from the typing package
-    sex: str|None # in that case, the code will be like this: sex: Optional[str] = None
-    capital_gain: int # in this version of python (v10), the optional module is included and we can utlize just typing this '|'
-    capital_loss: int
-    hours_per_week: int
-    native_country: str|None
 
-    class ConfigDict: # A nested class to provide extra configurations, such as an example of the input data.
-        json_schema_extra = {
+# Info: The sign "|" indicates that the data type of the 'marital_status' feature is optional.
+# So this feature can be a string or it doesn't contain any data type which means it can be an empty field
+# so, this is an Union ('OR' function).
+# this '|' is not available in the previous version of python, where we need to import the moddule, 'Optional' from the package 'typing' 
+# in that case, the code will be like this: sex: Optional[str] = None
+# in this version of python (v10), the optional module is included and we can utlize just typing this '|'
+# The Field function is used to provide additional metadata and validation rules, which are especially useful for generating documentation and setting default values.
+# The ellipsis ('...') indicates that this field is required. It means that the field must be provided when creating an instance of the InputData model.
+# The 'None' sets the default value of the workclass field to None. It means that if this field is not provided when creating an instance of the InputData model, it will default to None.
+
+class InputData(BaseModel):
+    age: int = Field(..., example=50)
+    workclass: str | None = Field(None, example="Private")
+    fnlgt: int = Field(..., example=234721)
+    education: str | None = Field(None, example="Doctorate")
+    education_num: int = Field(..., example=16)
+    marital_status: str | None = Field(None, example="Separated")
+    occupation: str | None = Field(None, example="Exec-managerial")
+    relationship: str | None = Field(None, example="Not-in-family")
+    race: str | None = Field(None, example="Black")
+    sex: str | None = Field(None, example="Female")
+    capital_gain: int = Field(..., example=0)
+    capital_loss: int = Field(..., example=0)
+    hours_per_week: int = Field(..., example=50)
+    native_country: str | None = Field(None, example="United-States")
+
+    # A nested class to provide extra configurations, such as an example of the input data.
+    class Config: 
+        schema_extra = {
             "example": {
                 'age': 50,
                 'workclass': "Private",
@@ -79,3 +91,7 @@ async def predict(data: InputData):
 
     return {"predictions": predictions.tolist()}
 
+# Run the app
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
