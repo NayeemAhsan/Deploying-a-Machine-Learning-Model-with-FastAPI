@@ -16,7 +16,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 
 
@@ -155,7 +155,7 @@ def get_inference_pipeline(config):
     # Filter rf_config to only include supported parameters
     filtered_rf_config = {k: v for k, v in config.items() if k in supported_params}
 
-    random_forest = RandomForestRegressor(**filtered_rf_config)
+    random_forest = RandomForestClassifier(**filtered_rf_config)
 
     # Create random forest
     #random_Forest = RandomForestRegressor(**rf_config['random_forest'])

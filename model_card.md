@@ -42,9 +42,9 @@
 
 ## Quantitative Analyses
 All results shown are calculated for class 1 (>50K) using sklearn metrics
-|				|Train |Validation|Test  |
-|---------------|------|----------|------
-|Precision		|0.999 |0.706     |0.342 |
-|Recall         |1.000 |0.629     |0.207 |
-|F1 Beta       	|0.999 |0.665     |0.991 |
+|				    |Train |Validation|Test  |
+|-----------|------|----------|------
+|Precision	|1.000 |0.729     |0.689 |
+|Recall     |1.000 |0.623     |0.639 |
+|F1 Beta    |0.999 |0.672     |0.747 |
 
